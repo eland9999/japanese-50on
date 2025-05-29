@@ -155,3 +155,141 @@
       vertical-align: middle;
     }
     table.fiftyon th {
+      font-size: 1.16em;
+      color: #fff;
+      background: var(--main-color);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      border-top: 2px solid #d1d5db;
+    }
+    table.fiftyon td {
+      background: #fff;
+      font-size: 1.08em;
+      font-weight: 500;
+      color: #222;
+      transition: background 0.2s;
+    }
+    table.fiftyon tr td:last-child, table.fiftyon tr th:last-child { border-right: none; }
+    table.fiftyon tr:last-child td { border-bottom: none; border-top: 2px solid #d1d5db; }
+    .kana { font-size: 1.33em; font-weight: 700; color: var(--main-color);}
+    .romaji { font-size: 0.95em; color: #626262; }
+    @media (max-width: 600px) {
+      table.fiftyon { font-size: 0.99em; min-width: 330px;}
+      table.fiftyon th, table.fiftyon td { padding: 7px 5px; }
+    }
+  </style>
+</head>
+<body>
+  <h1>日文五十音互動測驗</h1>
+  <div id="controls">
+    <button id="btnBasic">基本50音</button>
+    <button id="btnDakuten">濁音</button>
+    <button id="btnHandakuten">半濁音</button>
+    <button id="btnReview">50音複習</button>
+  </div>
+  <div id="quiz"></div>
+  <script>
+    const basicData = [
+      { kana:'あ', romaji:'a'},{ kana:'い', romaji:'i'},{ kana:'う', romaji:'u'},{ kana:'え', romaji:'e'},{ kana:'お', romaji:'o'},
+      { kana:'か', romaji:'ka'},{ kana:'き', romaji:'ki'},{ kana:'く', romaji:'ku'},{ kana:'け', romaji:'ke'},{ kana:'こ', romaji:'ko'},
+      { kana:'さ', romaji:'sa'},{ kana:'し', romaji:'shi'},{ kana:'す', romaji:'su'},{ kana:'せ', romaji:'se'},{ kana:'そ', romaji:'so'},
+      { kana:'た', romaji:'ta'},{ kana:'ち', romaji:'chi'},{ kana:'つ', romaji:'tsu'},{ kana:'て', romaji:'te'},{ kana:'と', romaji:'to'},
+      { kana:'な', romaji:'na'},{ kana:'に', romaji:'ni'},{ kana:'ぬ', romaji:'nu'},{ kana:'ね', romaji:'ne'},{ kana:'の', romaji:'no'},
+      { kana:'は', romaji:'ha'},{ kana:'ひ', romaji:'hi'},{ kana:'ふ', romaji:'fu'},{ kana:'へ', romaji:'he'},{ kana:'ほ', romaji:'ho'},
+      { kana:'ま', romaji:'ma'},{ kana:'み', romaji:'mi'},{ kana:'む', romaji:'mu'},{ kana:'め', romaji:'me'},{ kana:'も', romaji:'mo'},
+      { kana:'や', romaji:'ya'},{ kana:'ゆ', romaji:'yu'},{ kana:'よ', romaji:'yo'},{ kana:'ら', romaji:'ra'},{ kana:'り', romaji:'ri'},
+      { kana:'る', romaji:'ru'},{ kana:'れ', romaji:'re'},{ kana:'ろ', romaji:'ro'},{ kana:'わ', romaji:'wa'},{ kana:'を', romaji:'wo'},{ kana:'ん', romaji:'n'}
+    ];
+    const dakutenData = [
+      { kana:'が', romaji:'ga'},{ kana:'ぎ', romaji:'gi'},{ kana:'ぐ', romaji:'gu'},{ kana:'げ', romaji:'ge'},{ kana:'ご', romaji:'go'},
+      { kana:'ざ', romaji:'za'},{ kana:'じ', romaji:'ji'},{ kana:'ず', romaji:'zu'},{ kana:'ぜ', romaji:'ze'},{ kana:'ぞ', romaji:'zo'},
+      { kana:'だ', romaji:'da'},{ kana:'ぢ', romaji:'ji'},{ kana:'づ', romaji:'zu'},{ kana:'で', romaji:'de'},{ kana:'ど', romaji:'do'},
+      { kana:'ば', romaji:'ba'},{ kana:'び', romaji:'bi'},{ kana:'ぶ', romaji:'bu'},{ kana:'べ', romaji:'be'},{ kana:'ぼ', romaji:'bo'}
+    ];
+    const handakutenData = [
+      { kana:'ぱ', romaji:'pa'},{ kana:'ぴ', romaji:'pi'},{ kana:'ぷ', romaji:'pu'},{ kana:'ぺ', romaji:'pe'},{ kana:'ぽ', romaji:'po'}
+    ];
+
+    let currentData = basicData, questionCounter = 0, wrongList = [];
+    const perRow = 10;
+    function shuffle(arr) { return arr.map(v => ({v,sort:Math.random()})).sort((a,b)=>a.sort-b.sort).map(e=>e.v); }
+    function startQuiz(dataSet) {
+      currentData = dataSet; questionCounter = 0; wrongList = [];
+      document.getElementById('quiz').innerHTML = '';
+      addRound();
+    }
+    function addRound() {
+      const quizDiv = document.getElementById('quiz');
+      let roundData = shuffle(currentData);
+      if(wrongList.length) roundData = roundData.concat(wrongList);
+      const thisWrong = [];
+      const card = document.createElement('div');
+      card.className = 'card';
+      quizDiv.appendChild(card);
+      for(let i=0;i<roundData.length;i+=perRow){
+        const row = document.createElement('div'); row.className='row'; card.appendChild(row);
+        roundData.slice(i,i+perRow).forEach((item, idx) => {
+          questionCounter++;
+          const qNum = questionCounter;
+          const qDiv = document.createElement('div'); qDiv.className='question';
+          qDiv.innerHTML = `<label>${qNum}. ${item.kana}</label><input type='text' class='answer' id='ans${qNum}' autocomplete='off'/><span class='feedback' id='fb${qNum}'></span>`;
+          row.appendChild(qDiv);
+          const input=qDiv.querySelector('input'), fb=qDiv.querySelector('.feedback');
+          function process() { const u=input.value.trim().toLowerCase(); if(u===item.romaji){fb.textContent='✔'; fb.className='feedback correct';}else{fb.textContent=`✘ 正確: ${item.romaji}`; fb.className='feedback incorrect'; thisWrong.push(item);} }
+          function next(){const nxt=document.getElementById(`ans${qNum+1}`); if(nxt){nxt.focus();}else{wrongList=thisWrong; setTimeout(addRound,600);} }
+          input.addEventListener('change',()=>{process();next();});
+          input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();process();next();}});
+        });
+      }
+      setTimeout(()=>{const first=card.querySelector('.answer'); if(first)first.focus();},50);
+    }
+
+    function showReview() {
+      const quizDiv = document.getElementById('quiz');
+      let html = '<div class="card"><h2 style="color:#ed2939; margin-bottom:14px;">50音複習</h2>';
+      html += `<table class="fiftyon">
+        <tr>
+          <th><span class="kana">あ</span><br><span class="romaji">a</span></th>
+          <th><span class="kana">か</span><br><span class="romaji">ka</span></th>
+          <th><span class="kana">さ</span><br><span class="romaji">sa</span></th>
+          <th><span class="kana">た</span><br><span class="romaji">ta</span></th>
+          <th><span class="kana">な</span><br><span class="romaji">na</span></th>
+          <th><span class="kana">は</span><br><span class="romaji">ha</span></th>
+          <th><span class="kana">ま</span><br><span class="romaji">ma</span></th>
+          <th><span class="kana">や</span><br><span class="romaji">ya</span></th>
+          <th><span class="kana">ら</span><br><span class="romaji">ra</span></th>
+          <th><span class="kana">わ</span><br><span class="romaji">wa</span></th>
+        </tr>
+        <tr>
+          <td>い<br><span class="romaji">i</span></td><td>き<br><span class="romaji">ki</span></td><td>し<br><span class="romaji">shi</span></td><td>ち<br><span class="romaji">chi</span></td><td>に<br><span class="romaji">ni</span></td>
+          <td>ひ<br><span class="romaji">hi</span></td><td>み<br><span class="romaji">mi</span></td><td>　<br>　</td><td>り<br><span class="romaji">ri</span></td><td>　<br>　</td>
+        </tr>
+        <tr>
+          <td>う<br><span class="romaji">u</span></td><td>く<br><span class="romaji">ku</span></td><td>す<br><span class="romaji">su</span></td><td>つ<br><span class="romaji">tsu</span></td><td>ぬ<br><span class="romaji">nu</span></td>
+          <td>ふ<br><span class="romaji">fu</span></td><td>む<br><span class="romaji">mu</span></td><td>ゆ<br><span class="romaji">yu</span></td><td>る<br><span class="romaji">ru</span></td><td>　<br>　</td>
+        </tr>
+        <tr>
+          <td>え<br><span class="romaji">e</span></td><td>け<br><span class="romaji">ke</span></td><td>せ<br><span class="romaji">se</span></td><td>て<br><span class="romaji">te</span></td><td>ね<br><span class="romaji">ne</span></td>
+          <td>へ<br><span class="romaji">he</span></td><td>め<br><span class="romaji">me</span></td><td>　<br>　</td><td>れ<br><span class="romaji">re</span></td><td>　<br>　</td>
+        </tr>
+        <tr>
+          <td>お<br><span class="romaji">o</span></td><td>こ<br><span class="romaji">ko</span></td><td>そ<br><span class="romaji">so</span></td><td>と<br><span class="romaji">to</span></td><td>の<br><span class="romaji">no</span></td>
+          <td>ほ<br><span class="romaji">ho</span></td><td>も<br><span class="romaji">mo</span></td><td>よ<br><span class="romaji">yo</span></td><td>ろ<br><span class="romaji">ro</span></td><td>を<br><span class="romaji">wo</span></td>
+        </tr>
+        <tr>
+          <td colspan="10" style="text-align:center; border-bottom: none; border-top:2px solid #d1d5db;">
+            <span class="kana">ん</span> <span class="romaji">n</span>
+          </td>
+        </tr>
+      </table></div>`;
+      quizDiv.innerHTML = html;
+    }
+
+    document.getElementById('btnBasic').addEventListener('click', ()=>startQuiz(basicData));
+    document.getElementById('btnDakuten').addEventListener('click', ()=>startQuiz(dakutenData));
+    document.getElementById('btnHandakuten').addEventListener('click', ()=>startQuiz(handakutenData));
+    document.getElementById('btnReview').addEventListener('click', showReview);
+    window.onload = ()=>startQuiz(basicData);
+  </script>
+</body>
+</html>
