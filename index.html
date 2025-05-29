@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>日文五十音互動測驗</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    h1 { text-align: center; }
+    h2 { text-align: center; margin-top: 30px; }
+    #controls { text-align: center; margin-bottom: 20px; }
+    button { margin: 0 5px; padding: 8px 16px; font-size: 1em; }
+    #quiz { margin-top: 20px; }
+    .row { display: flex; justify-content: space-between; flex-wrap: wrap; margin-bottom: 15px; }
+    .question { width: 9%; margin: 0.5%; }
+    input.answer { width: 100%; padding: 4px; font-size: 1em; box-sizing: border-box; }
+    .feedback { display: block; margin-top: 4px; font-weight: bold; }
+    .correct { color: green; }
+    .incorrect { color: red; }
+    table.fiftyon { border-collapse: collapse; margin: 30px auto; font-size: 1.2em; }
+    table.fiftyon th, table.fiftyon td { border-right: 2px solid #444; padding: 6px 8px; text-align: center; }
+    table.fiftyon tr td:last-child, table.fiftyon tr th:last-child { border-right: none; }
+    table.fiftyon tr:last-child td { border-top: 2px solid #444; }
+  </style>
+</head>
+<body>
+  <h1>日文五十音互動測驗</h1>
+  <div id="controls">
+    <button id="btnBasic">基本50音</button>
+    <button id="btnDakuten">濁音</button>
+    <button id="btnHandakuten">半濁音</button>
+    <button id="btnReview">50音複習</button>
+  </div>
+  <div id="quiz"></div>
+  <script>
+    const basicData = [
+      { kana:'あ', romaji:'a'},{ kana:'い', romaji:'i'},{ kana:'う', romaji:'u'},{ kana:'え', romaji:'e'},{ kana:'お', romaji:'o'},
+      { kana:'か', romaji:'ka'},{ kana:'き', romaji:'ki'},{ kana:'く', romaji:'ku'},{ kana:'け', romaji:'ke'},{ kana:'こ', romaji:'ko'},
+      { kana:'さ', romaji:'sa'},{ kana:'し', romaji:'shi'},{ kana:'す', romaji:'su'},{ kana:'せ', romaji:'se'},{ kana:'そ', romaji:'so'},
+      { kana:'た', romaji:'ta'},{ kana:'ち', romaji:'chi'},{ kana:'つ', romaji:'tsu'},{ kana:'て', romaji:'te'},{ kana:'と', romaji:'to'},
+      { kana:'な', romaji:'na'},{ kana:'に', romaji:'ni'},{ kana:'ぬ', romaji:'nu'},{ kana:'ね', romaji:'ne'},{ kana:'の', romaji:'no'},
+      { kana:'は', romaji:'ha'},{ kana:'ひ', romaji:'hi'},{ kana:'ふ', romaji:'fu'},{ kana:'へ', romaji:'he'},{ kana:'ほ', romaji:'ho'},
+      { kana:'ま', romaji:'ma'},{ kana:'み', romaji:'mi'},{ kana:'む', romaji:'mu'},{ kana:'め', romaji:'me'},{ kana:'も', romaji:'mo'},
+      { kana:'や', romaji:'ya'},{ kana:'ゆ', romaji:'yu'},{ kana:'よ', romaji:'yo'},{ kana:'ら', romaji:'ra'},{ kana:'り', romaji:'ri'},
+      { kana:'る', romaji:'ru'},{ kana:'れ', romaji:'re'},{ kana:'ろ', romaji:'ro'},{ kana:'わ', romaji:'wa'},{ kana:'を', romaji:'wo'},{ kana:'ん', romaji:'n'}
+    ];
+    const dakutenData = [ ];
+    const handakutenData = [ ];
+    let currentData = basicData;
+    let questionCounter = 0;
+    let wrongList = [];
+    const perRow = 10;
+
+    function shuffle(arr) { return arr.map(v => ({v,sort:Math.random()})).sort((a,b)=>a.sort-b.sort).map(e=>e.v); }
+    function startQuiz(dataSet) { currentData = dataSet; questionCounter = 0; wrongList = []; document.getElementById('quiz').innerHTML = ''; addRound(); }
+    function addRound() { }
+    function showReview() {
+      const quizDiv = document.getElementById('quiz');
+      let html = '<h2>50音複習</h2>';
+      html += `<table class="fiftyon">
+        <tr>
+          <th>あ<br>a</th>
+          <th>か<br>ka</th>
+          <th>さ<br>sa</th>
+          <th>た<br>ta</th>
+          <th>な<br>na</th>
+          <th>は<br>ha</th>
+          <th>ま<br>ma</th>
+          <th>や<br>ya</th>
+          <th>ら<br>ra</th>
+          <th>わ<br>wa</th>
+        </tr>
+        <tr>
+          <td>い<br>i</td>
+          <td>き<br>ki</td>
+          <td>し<br>shi</td>
+          <td>ち<br>chi</td>
+          <td>に<br>ni</td>
+          <td>ひ<br>hi</td>
+          <td>み<br>mi</td>
+          <td>　<br>　</td>
+          <td>り<br>ri</td>
+          <td>　<br>　</td>
+        </tr>
+        <tr>
+          <td>う<br>u</td>
+          <td>く<br>ku</td>
+          <td>す<br>su</td>
+          <td>つ<br>tsu</td>
+          <td>ぬ<br>nu</td>
+          <td>ふ<br>fu</td>
+          <td>む<br>mu</td>
+          <td>ゆ<br>yu</td>
+          <td>る<br>ru</td>
+          <td>　<br>　</td>
+        </tr>
+        <tr>
+          <td>え<br>e</td>
+          <td>け<br>ke</td>
+          <td>せ<br>se</td>
+          <td>て<br>te</td>
+          <td>ね<br>ne</td>
+          <td>へ<br>he</td>
+          <td>め<br>me</td>
+          <td>　<br>　</td>
+          <td>れ<br>re</td>
+          <td>　<br>　</td>
+        </tr>
+        <tr>
+          <td>お<br>o</td>
+          <td>こ<br>ko</td>
+          <td>そ<br>so</td>
+          <td>と<br>to</td>
+          <td>の<br>no</td>
+          <td>ほ<br>ho</td>
+          <td>も<br>mo</td>
+          <td>よ<br>yo</td>
+          <td>ろ<br>ro</td>
+          <td>を<br>wo</td>
+        </tr>
+        <tr>
+          <td colspan="10" style="text-align:center; border-top:2px solid #444;">ん n</td>
+        </tr>
+      </table>`;
+      quizDiv.innerHTML = html;
+    }
+
+    document.getElementById('btnBasic').addEventListener('click', ()=>startQuiz(basicData));
+    document.getElementById('btnDakuten').addEventListener('click', ()=>startQuiz(dakutenData));
+    document.getElementById('btnHandakuten').addEventListener('click', ()=>startQuiz(handakutenData));
+    document.getElementById('btnReview').addEventListener('click', showReview);
+
+    // 初始化
+    window.onload = ()=>startQuiz(basicData);
+  </script>
+</body>
+</html>
