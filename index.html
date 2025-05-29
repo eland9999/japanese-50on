@@ -4,137 +4,154 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>日文五十音互動測驗</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: sans-serif; padding: 20px; }
-    h1 { text-align: center; }
-    h2 { text-align: center; margin-top: 30px; }
-    #controls { text-align: center; margin-bottom: 20px; }
-    button { margin: 0 5px; padding: 8px 16px; font-size: 1em; }
-    #quiz { margin-top: 20px; }
-    .row { display: flex; justify-content: space-between; flex-wrap: wrap; margin-bottom: 15px; }
-    .question { width: 9%; margin: 0.5%; }
-    input.answer { width: 100%; padding: 4px; font-size: 1em; box-sizing: border-box; }
-    .feedback { display: block; margin-top: 4px; font-weight: bold; }
-    .correct { color: green; }
-    .incorrect { color: red; }
+    :root {
+      --main-color: #ed2939;
+      --accent-color: #1f2937;
+      --bg-color: #f6f7fb;
+      --card-bg: #fff;
+      --shadow: 0 4px 16px 0 rgba(0,0,0,0.06);
+      --radius: 20px;
+    }
+    body {
+      font-family: 'Noto Sans JP', 'Roboto', Arial, sans-serif;
+      background: var(--bg-color);
+      margin: 0; padding: 0;
+      min-height: 100vh;
+    }
+    h1 {
+      text-align: center;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      font-size: 2.2em;
+      color: var(--main-color);
+      margin-top: 32px;
+      margin-bottom: 16px;
+    }
+    #controls {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    #controls button {
+      margin: 0 10px;
+      padding: 12px 28px;
+      border-radius: var(--radius);
+      border: none;
+      background: var(--accent-color);
+      color: #fff;
+      font-size: 1.1em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      box-shadow: 0 2px 6px 0 rgba(30,30,30,0.08);
+    }
+    #controls button:hover, #controls button:focus {
+      background: var(--main-color);
+      transform: translateY(-2px) scale(1.03);
+    }
+    #quiz {
+      margin: 0 auto;
+      max-width: 960px;
+      min-height: 380px;
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 30px 24px;
+      margin-bottom: 30px;
+      animation: fadeIn 0.5s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px);}
+      to { opacity: 1; transform: none;}
+    }
+    .row {
+      display: flex;
+      justify-content: flex-start;
+      gap: 24px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .question {
+      flex: 1 1 140px;
+      min-width: 110px;
+      max-width: 160px;
+      padding: 18px 8px 12px;
+      margin: 4px 0;
+      border-radius: 12px;
+      background: #fafafd;
+      box-shadow: 0 1px 3px 0 rgba(180,180,180,0.05);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 1.1em;
+      position: relative;
+      border: 1.5px solid #e2e4e8;
+      transition: border 0.2s;
+    }
+    .question:focus-within {
+      border: 1.5px solid var(--main-color);
+      background: #fff0f2;
+    }
+    .question label {
+      font-size: 1.5em;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: var(--main-color);
+      margin-bottom: 5px;
+      user-select: none;
+    }
+    input.answer {
+      width: 80%;
+      padding: 6px;
+      font-size: 1.15em;
+      border-radius: 6px;
+      border: 1px solid #cfcfcf;
+      text-align: center;
+      margin-bottom: 2px;
+      outline: none;
+      transition: border 0.2s;
+    }
+    input.answer:focus {
+      border: 1.5px solid var(--main-color);
+      background: #fffcfc;
+    }
+    .feedback {
+      margin-top: 4px;
+      font-weight: 700;
+      font-size: 1.12em;
+      height: 1.3em;
+      min-width: 48px;
+      display: inline-block;
+    }
+    .correct { color: #229966; }
+    .incorrect { color: #e11d48; }
+    @media (max-width: 800px) {
+      .row { gap: 12px;}
+      .question { min-width: 90px; max-width: 120px; font-size: 0.98em;}
+      .card { padding: 18px 6px;}
+      #quiz { padding: 0 4vw;}
+    }
+    /* 五十音表 */
     table.fiftyon {
       border-collapse: collapse;
-      margin: 30px auto;
-      font-size: 1.2em;
+      margin: 28px auto;
       background: #fff;
+      font-size: 1.23em;
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      overflow: hidden;
+      min-width: 530px;
+      max-width: 98vw;
     }
     table.fiftyon th, table.fiftyon td {
-      border-right: 2px solid #444;
-      border-bottom: 2px solid #444;
-      padding: 6px 12px;
+      border-right: 2px solid #d1d5db;
+      border-bottom: 2px solid #d1d5db;
+      padding: 12px 16px;
       text-align: center;
-      min-width: 32px;
+      font-family: 'Noto Sans JP', 'Roboto', Arial, sans-serif;
+      vertical-align: middle;
     }
-    table.fiftyon th:last-child, table.fiftyon td:last-child { border-right: none; }
-    table.fiftyon tr:last-child td { border-bottom: none; border-top: 2px solid #444; }
-  </style>
-</head>
-<body>
-  <h1>日文五十音互動測驗</h1>
-  <div id="controls">
-    <button id="btnBasic">基本50音</button>
-    <button id="btnDakuten">濁音</button>
-    <button id="btnHandakuten">半濁音</button>
-    <button id="btnReview">50音複習</button>
-  </div>
-  <div id="quiz"></div>
-  <script>
-    const basicData = [
-      { kana:'あ', romaji:'a'},{ kana:'い', romaji:'i'},{ kana:'う', romaji:'u'},{ kana:'え', romaji:'e'},{ kana:'お', romaji:'o'},
-      { kana:'か', romaji:'ka'},{ kana:'き', romaji:'ki'},{ kana:'く', romaji:'ku'},{ kana:'け', romaji:'ke'},{ kana:'こ', romaji:'ko'},
-      { kana:'さ', romaji:'sa'},{ kana:'し', romaji:'shi'},{ kana:'す', romaji:'su'},{ kana:'せ', romaji:'se'},{ kana:'そ', romaji:'so'},
-      { kana:'た', romaji:'ta'},{ kana:'ち', romaji:'chi'},{ kana:'つ', romaji:'tsu'},{ kana:'て', romaji:'te'},{ kana:'と', romaji:'to'},
-      { kana:'な', romaji:'na'},{ kana:'に', romaji:'ni'},{ kana:'ぬ', romaji:'nu'},{ kana:'ね', romaji:'ne'},{ kana:'の', romaji:'no'},
-      { kana:'は', romaji:'ha'},{ kana:'ひ', romaji:'hi'},{ kana:'ふ', romaji:'fu'},{ kana:'へ', romaji:'he'},{ kana:'ほ', romaji:'ho'},
-      { kana:'ま', romaji:'ma'},{ kana:'み', romaji:'mi'},{ kana:'む', romaji:'mu'},{ kana:'め', romaji:'me'},{ kana:'も', romaji:'mo'},
-      { kana:'や', romaji:'ya'},{ kana:'ゆ', romaji:'yu'},{ kana:'よ', romaji:'yo'},{ kana:'ら', romaji:'ra'},{ kana:'り', romaji:'ri'},
-      { kana:'る', romaji:'ru'},{ kana:'れ', romaji:'re'},{ kana:'ろ', romaji:'ro'},{ kana:'わ', romaji:'wa'},{ kana:'を', romaji:'wo'},{ kana:'ん', romaji:'n'}
-    ];
-    const dakutenData = [
-      { kana:'が', romaji:'ga'},{ kana:'ぎ', romaji:'gi'},{ kana:'ぐ', romaji:'gu'},{ kana:'げ', romaji:'ge'},{ kana:'ご', romaji:'go'},
-      { kana:'ざ', romaji:'za'},{ kana:'じ', romaji:'ji'},{ kana:'ず', romaji:'zu'},{ kana:'ぜ', romaji:'ze'},{ kana:'ぞ', romaji:'zo'},
-      { kana:'だ', romaji:'da'},{ kana:'ぢ', romaji:'ji'},{ kana:'づ', romaji:'zu'},{ kana:'で', romaji:'de'},{ kana:'ど', romaji:'do'},
-      { kana:'ば', romaji:'ba'},{ kana:'び', romaji:'bi'},{ kana:'ぶ', romaji:'bu'},{ kana:'べ', romaji:'be'},{ kana:'ぼ', romaji:'bo'}
-    ];
-    const handakutenData = [
-      { kana:'ぱ', romaji:'pa'},{ kana:'ぴ', romaji:'pi'},{ kana:'ぷ', romaji:'pu'},{ kana:'ぺ', romaji:'pe'},{ kana:'ぽ', romaji:'po'}
-    ];
-
-    // 選擇題渲染
-    let currentData = basicData, questionCounter = 0, wrongList = [];
-    const perRow = 10;
-    function shuffle(arr) { return arr.map(v => ({v,sort:Math.random()})).sort((a,b)=>a.sort-b.sort).map(e=>e.v); }
-    function startQuiz(dataSet) {
-      currentData = dataSet; questionCounter = 0; wrongList = [];
-      document.getElementById('quiz').innerHTML = '';
-      addRound();
-    }
-    function addRound() {
-      const quizDiv = document.getElementById('quiz');
-      let roundData = shuffle(currentData);
-      if(wrongList.length) roundData = roundData.concat(wrongList);
-      const thisWrong = [];
-      roundData.forEach((item, idx) => {
-        questionCounter++;
-        const qNum = questionCounter;
-        if ((qNum-1)%perRow===0) {
-          const row = document.createElement('div'); row.className='row'; quizDiv.appendChild(row);
-        }
-        const row = quizDiv.lastElementChild;
-        const qDiv = document.createElement('div'); qDiv.className='question';
-        qDiv.innerHTML = `<label>${qNum}. ${item.kana}</label><br><input type='text' class='answer' id='ans${qNum}' autocomplete='off'/><span class='feedback' id='fb${qNum}'></span>`;
-        row.appendChild(qDiv);
-        const input=qDiv.querySelector('input'), fb=qDiv.querySelector('.feedback');
-        function process() { const u=input.value.trim().toLowerCase(); if(u===item.romaji){fb.textContent='✔'; fb.className='feedback correct';}else{fb.textContent=`✘ 正確: ${item.romaji}`; fb.className='feedback incorrect'; thisWrong.push(item);} }
-        function next(){const nxt=document.getElementById(`ans${qNum+1}`); if(nxt){nxt.focus();}else{wrongList=thisWrong; setTimeout(addRound,500);} }
-        input.addEventListener('change',()=>{process();next();});
-        input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();process();next();}});
-      });
-      setTimeout(()=>{const first=document.getElementById(`ans${questionCounter-roundData.length+1}`); if(first)first.focus();},50);
-    }
-
-    function showReview() {
-      const quizDiv = document.getElementById('quiz');
-      let html = '<h2>50音複習</h2>';
-      html += `<table class="fiftyon">
-        <tr>
-          <th>あ<br>a</th><th>か<br>ka</th><th>さ<br>sa</th><th>た<br>ta</th><th>な<br>na</th>
-          <th>は<br>ha</th><th>ま<br>ma</th><th>や<br>ya</th><th>ら<br>ra</th><th>わ<br>wa</th>
-        </tr>
-        <tr>
-          <td>い<br>i</td><td>き<br>ki</td><td>し<br>shi</td><td>ち<br>chi</td><td>に<br>ni</td>
-          <td>ひ<br>hi</td><td>み<br>mi</td><td>　<br>　</td><td>り<br>ri</td><td>　<br>　</td>
-        </tr>
-        <tr>
-          <td>う<br>u</td><td>く<br>ku</td><td>す<br>su</td><td>つ<br>tsu</td><td>ぬ<br>nu</td>
-          <td>ふ<br>fu</td><td>む<br>mu</td><td>ゆ<br>yu</td><td>る<br>ru</td><td>　<br>　</td>
-        </tr>
-        <tr>
-          <td>え<br>e</td><td>け<br>ke</td><td>せ<br>se</td><td>て<br>te</td><td>ね<br>ne</td>
-          <td>へ<br>he</td><td>め<br>me</td><td>　<br>　</td><td>れ<br>re</td><td>　<br>　</td>
-        </tr>
-        <tr>
-          <td>お<br>o</td><td>こ<br>ko</td><td>そ<br>so</td><td>と<br>to</td><td>の<br>no</td>
-          <td>ほ<br>ho</td><td>も<br>mo</td><td>よ<br>yo</td><td>ろ<br>ro</td><td>を<br>wo</td>
-        </tr>
-        <tr>
-          <td colspan="10" style="text-align:center; border-bottom: none; border-top:2px solid #444;">ん n</td>
-        </tr>
-      </table>`;
-      quizDiv.innerHTML = html;
-    }
-
-    document.getElementById('btnBasic').addEventListener('click', ()=>startQuiz(basicData));
-    document.getElementById('btnDakuten').addEventListener('click', ()=>startQuiz(dakutenData));
-    document.getElementById('btnHandakuten').addEventListener('click', ()=>startQuiz(handakutenData));
-    document.getElementById('btnReview').addEventListener('click', showReview);
-
-    window.onload = ()=>startQuiz(basicData);
-  </script>
-</body>
-</html>
+    table.fiftyon th {
