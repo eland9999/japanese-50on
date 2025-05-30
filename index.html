@@ -6,37 +6,104 @@
   <title>日英雙語互動學習</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    :root { --jp-main:#ed2939; --en-main:#2257c2; --accent:#1f2937; --bg:#f6f7fb; --card:#fff; --shadow:0 4px 16px rgba(0,0,0,0.06); --radius:16px; }
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:'Noto Sans JP','Roboto',sans-serif;background:var(--bg)}
-    header{text-align:center;padding:20px 0} header h1{font-size:2em;color:var(--accent)}
-    #langSwitch{text-align:center;margin-bottom:16px} #langSwitch button{margin:0 8px;padding:8px 16px;border:none;border-radius:8px;background:var(--accent);color:#fff;font-weight:700;cursor:pointer;transition:background .2s} #langSwitch button.active{background:var(--jp-main)}
-    section{display:none;padding:0 12px} section.active{display:block}
-    .controls{text-align:center;margin:16px 0} .controls button{margin:4px;padding:8px 14px;border:none;border-radius:10px;background:var(--accent);color:#fff;cursor:pointer;font-weight:700;transition:background .2s} .controls button:hover{background:var(--jp-main)}
-    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);max-width:960px;margin:0 auto 24px;padding:24px}
-    /* Japanese quiz */
-    .row{display:flex;flex-wrap:wrap;gap:12px}
-    .question{flex:1 1 80px;background:#fafafd;border:1px solid #e2e4e8;border-radius:10px;padding:12px;text-align:center}
-    .question label{font-size:1.4em;color:var(--jp-main);font-weight:700}
-    .question input{width:100%;padding:4px;margin-top:4px}
-    .feedback{display:block;margin-top:4px;font-weight:700}
-    .correct{color:green} .incorrect{color:red}
-    /* Japanese review table */
-    table.jp-review{border-collapse:collapse;width:100%;max-width:600px;margin:0 auto}
-    table.jp-review th, table.jp-review td{border:1px solid #ccc;padding:6px;text-align:center}
-    table.jp-review th{background:var(--jp-main);color:#fff}
+    :root {
+      --jp-main: #ed2939;
+      --en-main: #2257c2;
+      --accent: #1f2937;
+      --bg: #f7f8fa;
+      --card: #fff;
+      --shadow: 0 6px 24px rgba(50,60,100,.09);
+      --radius: 20px;
+    }
+    body { font-family: 'Noto Sans JP','Roboto',sans-serif; background: var(--bg);}
+    header { text-align: center; padding: 24px 0 12px;}
+    header h1 { font-size: 2.1em; color: var(--accent);}
+    #langSwitch { text-align: center; margin-bottom: 22px;}
+    #langSwitch button {
+      margin: 0 8px; padding: 10px 26px; border: none; border-radius: 12px;
+      background: var(--accent); color: #fff; font-weight: 700; cursor: pointer;
+      transition: background 0.17s, transform 0.09s;
+      font-size: 1.12em; letter-spacing: 1px;
+    }
+    #langSwitch button.active { background: var(--jp-main);}
+    section { display: none; padding: 0 12px;}
+    section.active { display: block;}
+    .controls { text-align: center; margin: 20px 0;}
+    .controls button {
+      margin: 7px 5px; padding: 8px 20px; border: none; border-radius: 8px;
+      background: var(--accent); color: #fff; cursor: pointer; font-weight: 700;
+      transition: background .17s, transform .09s;
+      font-size: 1em;
+    }
+    .controls button:hover { background: var(--jp-main);}
+    .card {
+      background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+      max-width: 900px; margin: 0 auto 32px; padding: 38px 28px;
+      min-height: 140px;
+    }
+    /* Japanese quiz refined */
+    .row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 10px;}
+    .question {
+      flex: 1 1 90px;
+      background: #fafdff;
+      border: 1.2px solid #e2e4e8;
+      border-radius: 13px;
+      min-width: 72px;
+      max-width: 96px;
+      padding: 16px 8px 10px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+      margin-bottom: 5px;
+      position: relative;
+    }
+    .question label {
+      display: block; font-size: 1.3em; color: var(--jp-main); font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .question input {
+      width: 92%; padding: 5px 2px; font-size: 1.1em; border-radius: 4px; border: 1px solid #dadada; background: #f6f8fa;
+      text-align: center;
+      margin-bottom: 3px;
+    }
+    .feedback { display: block; margin-top: 4px; font-weight: 700; font-size: 1em;}
+    .correct { color: #21ab39; }
+    .incorrect { color: #e54e52;}
+    /* Japanese review table (beautify!) */
+    .jp-review-wrap { display:flex; justify-content:center; }
+    table.jp-review {
+      border-collapse: collapse; min-width: 700px; background: #fff; font-size: 1.14em; margin: 0 auto;
+      margin-top:10px; margin-bottom:20px; box-shadow:0 2px 8px rgba(0,0,0,0.07);
+    }
+    table.jp-review th, table.jp-review td {
+      border: 1.5px solid #ddd;
+      padding: 13px 10px 9px 10px;
+      text-align: center;
+      font-size: 1.10em;
+    }
+    table.jp-review th {
+      background: var(--jp-main); color: #fff; font-size:1.1em; font-weight:700;
+    }
+    table.jp-review tr:nth-child(even) td { background: #f8fafb;}
+    .jp-review-title {text-align:left;font-size:1.06em;font-weight:700;color:var(--jp-main);padding:8px 0 5px 10px;}
     /* English quiz */
-    .word-item{display:flex;align-items:center;padding:6px 0;border-bottom:1px solid #eee}
-    .word-index{color:var(--en-main);width:2em;text-align:right;font-weight:700}
-    .word-meaning{flex:0 0 120px}
-    .word-src{margin-left:12px;color:#b85728;font-size:.9em}
-    .word-link a{margin-left:8px;text-decoration:underline;font-size:.9em;color:#e54848}
-    .ans-input{width:100px;padding:4px;margin:0 8px}
-    .ans-feedback{min-width:60px;font-weight:700}
-    .syns{color:#997820;font-size:.9em;margin-left:8px}
-    button.en-btn{margin:24px auto 0 auto;display:block;background:var(--en-main);color:#fff;border:none;border-radius:9px;padding:10px 28px;font-weight:700;cursor:pointer}
-    button.en-btn:hover{background:#e54848}
-    @media(max-width:600px){.question{flex:1 1 60px}.word-meaning{flex:1 1 100px}}
+    .word-item { display: flex; align-items: center; padding: 7px 0; border-bottom: 1px solid #f0eeee;}
+    .word-index { color: var(--en-main); width: 2em; text-align: right; font-weight: 700;}
+    .word-meaning { flex: 0 0 140px;}
+    .word-src { margin-left: 12px; color: #b85728; font-size: .95em;}
+    .word-link a { margin-left: 8px; text-decoration: underline; font-size: .92em; color: #e54848;}
+    .ans-input { width: 120px; padding: 6px; margin: 0 8px; border-radius:4px; border:1px solid #dadada;}
+    .ans-feedback { min-width: 60px; font-weight: 700;}
+    .syns { color: #997820; font-size: .96em; margin-left: 8px;}
+    button.en-btn { margin: 24px auto 0 auto; display: block; background: var(--en-main); color: #fff;
+      border: none; border-radius: 9px; padding: 10px 28px; font-weight: 700; cursor: pointer; font-size:1.05em;}
+    button.en-btn:hover { background: #e54848;}
+    @media (max-width: 800px) { table.jp-review { min-width:500px;font-size:.98em;} }
+    @media (max-width:600px) {
+      .card {padding:12px;}
+      .question {flex: 1 1 44vw;min-width:40vw;}
+      table.jp-review{min-width:99vw;}
+      .jp-review-title {padding-left:2vw;}
+    }
   </style>
 </head>
 <body>
@@ -45,6 +112,7 @@
     <button id="btnJP" class="active">日文50音</button>
     <button id="btnEN">英文單字</button>
   </div>
+  <!-- Japanese Section -->
   <section id="jpSection" class="active">
     <div class="controls">
       <button id="btnBasic">基本50音</button>
@@ -56,15 +124,28 @@
     </div>
     <div class="card" id="jpQuiz"></div>
   </section>
+  <!-- English Section -->
   <section id="enSection">
     <div class="card" id="enQuiz">Loading…</div>
   </section>
-  <script>
-  // 語言切換
-  document.getElementById('btnJP').onclick=()=>{document.getElementById('jpSection').classList.add('active');document.getElementById('enSection').classList.remove('active');document.getElementById('btnJP').classList.add('active');document.getElementById('btnEN').classList.remove('active')};
-  document.getElementById('btnEN').onclick=()=>{document.getElementById('enSection').classList.add('active');document.getElementById('jpSection').classList.remove('active');document.getElementById('btnEN').classList.add('active');document.getElementById('btnJP').classList.remove('active');loadVocab()};
-  // 日文50音
-  const basicData=[
+<script>
+  // 切換語言頁
+  document.getElementById('btnJP').onclick = ()=>{
+    document.getElementById('jpSection').classList.add('active');
+    document.getElementById('enSection').classList.remove('active');
+    document.getElementById('btnJP').classList.add('active');
+    document.getElementById('btnEN').classList.remove('active');
+  };
+  document.getElementById('btnEN').onclick = ()=>{
+    document.getElementById('enSection').classList.add('active');
+    document.getElementById('jpSection').classList.remove('active');
+    document.getElementById('btnEN').classList.add('active');
+    document.getElementById('btnJP').classList.remove('active');
+    loadVocab();
+  };
+
+  // ----------- 日文 50音題庫 -----------
+  const basicData = [
     {kana:'あ',answer:'a'},{kana:'い',answer:'i'},{kana:'う',answer:'u'},{kana:'え',answer:'e'},{kana:'お',answer:'o'},
     {kana:'か',answer:'ka'},{kana:'き',answer:'ki'},{kana:'く',answer:'ku'},{kana:'け',answer:'ke'},{kana:'こ',answer:'ko'},
     {kana:'さ',answer:'sa'},{kana:'し',answer:'shi'},{kana:'す',answer:'su'},{kana:'せ',answer:'se'},{kana:'そ',answer:'so'},
@@ -75,55 +156,106 @@
     {kana:'や',answer:'ya'},{kana:'ゆ',answer:'yu'},{kana:'よ',answer:'yo'},{kana:'ら',answer:'ra'},{kana:'り',answer:'ri'},
     {kana:'る',answer:'ru'},{kana:'れ',answer:'re'},{kana:'ろ',answer:'ro'},{kana:'わ',answer:'wa'},{kana:'を',answer:'wo'},{kana:'ん',answer:'n'}
   ];
-  const dakutenData=[
+  const dakutenData = [
     {kana:'が',answer:'ga'},{kana:'ぎ',answer:'gi'},{kana:'ぐ',answer:'gu'},{kana:'げ',answer:'ge'},{kana:'ご',answer:'go'},
     {kana:'ざ',answer:'za'},{kana:'じ',answer:'ji'},{kana:'ず',answer:'zu'},{kana:'ぜ',answer:'ze'},{kana:'ぞ',answer:'zo'},
     {kana:'だ',answer:'da'},{kana:'ぢ',answer:'ji'},{kana:'づ',answer:'zu'},{kana:'で',answer:'de'},{kana:'ど',answer:'do'},
     {kana:'ば',answer:'ba'},{kana:'び',answer:'bi'},{kana:'ぶ',answer:'bu'},{kana:'べ',answer:'be'},{kana:'ぼ',answer:'bo'}
   ];
-  const handakutenData=[
+  const handakutenData = [
     {kana:'ぱ',answer:'pa'},{kana:'ぴ',answer:'pi'},{kana:'ぷ',answer:'pu'},{kana:'ぺ',answer:'pe'},{kana:'ぽ',answer:'po'}
   ];
-  let jpWrong=[],jpCount=0,perRow=10;
-  function shuffle(a){return a.map(v=>({v,sort:Math.random()})).sort((a,b)=>a.sort-b.sort).map(e=>e.v)}
-  function startJP(data){jpWrong=[];jpCount=0;document.getElementById('jpQuiz').innerHTML='';addJPRound(data)}
+  let jpWrong = [], perRow = 10;
+  function shuffle(a) { return a.map(v=>({v,sort:Math.random()})).sort((a,b)=>a.sort-b.sort).map(e=>e.v);}
+  function startJP(data){
+    jpWrong=[]; document.getElementById('jpQuiz').innerHTML='';
+    addJPRound(data);
+  }
   function addJPRound(data){
-    const div=document.getElementById('jpQuiz');
-    let arr=shuffle(data).concat(jpWrong);
-    jpWrong=[];
-    // build inputs
+    const div = document.getElementById('jpQuiz');
+    let arr = shuffle(data).concat(jpWrong);
+    jpWrong = [];
     arr.forEach((it,i)=>{
-      jpCount=i+1;
-      if(i%perRow===0){const row=document.createElement('div');row.className='row';div.appendChild(row)}
-      const row=div.lastChild;
-      const q=document.createElement('div');q.className='question';
-      q.innerHTML=`<label>${jpCount}. ${it.kana}</label><input id='jpa${jpCount}'/><span class='feedback' id='jpf${jpCount}'></span>`;
+      if(i%perRow===0){const row=document.createElement('div');row.className='row';div.appendChild(row);}
+      const row = div.lastChild;
+      const q = document.createElement('div'); q.className = 'question';
+      q.innerHTML = `<label>${i+1}. ${it.kana}</label>
+        <input id='jpa${i+1}' autocomplete='off'/>
+        <span class='feedback' id='jpf${i+1}'></span>`;
       row.appendChild(q);
-      const inp=q.querySelector('input'),fb=q.querySelector('.feedback');
-      inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();check();next()}});
-      inp.addEventListener('change',()=>{check();next()});
-      function check(){const v=inp.value.trim().toLowerCase();if(v===it.answer){fb.textContent='✔';fb.className='feedback correct'}else{fb.textContent=`✘ ${it.answer}`;fb.className='feedback incorrect';jpWrong.push(it)}}
-      function next(){const nx=document.getElementById('jpa'+(jpCount+1));if(nx)nx.focus();else return}
+      const inp = q.querySelector('input'), fb = q.querySelector('.feedback');
+      inp.addEventListener('keydown', e=>{
+        if(e.key==='Enter'){e.preventDefault(); check(); next();}
+      });
+      inp.addEventListener('change',()=>{check();next();});
+      function check(){
+        const v = inp.value.trim().toLowerCase();
+        if(v===it.answer){ fb.textContent='✔'; fb.className='feedback correct'; }
+        else{ fb.textContent=`✘ ${it.answer}`; fb.className='feedback incorrect'; jpWrong.push(it);}
+      }
+      function next(){ const nx = document.getElementById('jpa'+(i+2)); if(nx) nx.focus(); }
     });
     setTimeout(()=>{document.getElementById('jpa1').focus()},50);
   }
-  function renderJPReview(data,title){const div=document.getElementById('jpQuiz');let html=`<div class='card'><h3 style='color:var(--jp-main);text-align:center;'>${title}</h3><table class='jp-review'>`;
-    data.forEach((it,i)=>{if(i%10===0)html+='<tr>';html+=`<td>${it.kana}<br>${it.answer}</td>`;if(i%10===9)html+='</tr>'});
-    if(data.length%10!==0)html+='</tr>';
-    html+='</table></div>';div.innerHTML=html}
-  document.getElementById('btnBasic').onclick=()=>startJP(basicData);
-  document.getElementById('btnDakuten').onclick=()=>startJP(dakutenData);
-  document.getElementById('btnHandakuten').onclick=()=>startJP(handakutenData);
-  document.getElementById('btnReviewBasic').onclick=()=>renderJPReview(basicData,'基本50音複習');
-  document.getElementById('btnReviewDakuten').onclick=()=>renderJPReview(dakutenData,'濁音複習');
-  document.getElementById('btnReviewHandakuten').onclick=()=>renderJPReview(handakutenData,'半濁音複習');
-  window.onload=()=>startJP(basicData);
-  // 英文單字
-  let vocab=[];
-  async function loadVocab(){try{const res=await fetch('https://huggingface.co/datasets/aishell/english-vocabulary/resolve/main/words_10000.json');vocab=await res.json();renderEN()}catch(err){document.getElementById('enQuiz').innerHTML='⚠️ 無法載入單字庫，請檢查網路或稍後再試';console.error(err)}}
-  function shuffleV(a){return a.map(v=>({v,sort:Math.random()})).sort((a,b)=>a.sort-b.sort).map(e=>e.v)}
-  function renderEN(){const num=20;const list=shuffleV(vocab).slice(0,num);let html='';list.forEach((it,i)=>{const w=encodeURIComponent(it.word),syns=it.syns||[];html+=`<div class='word-item'><span class='word-index'>${i+1}.</span><span class='word-meaning'>${it.meaning}</span><input id='ena${i}' class='ans-input' data-ans='${it.word.toLowerCase()}' data-syns='${syns.join(',')}'/><span id='enf${i}' class='ans-feedback'></span><span class='word-src'>[${it.src}]</span><span class='word-link'><a href='https://dictionary.cambridge.org/dictionary/english/${w}' target='_blank'>Cambridge</a><a href='https://www.urbandictionary.com/define.php?term=${w}' target='_blank'>Urban</a></span></div>`});html+=`<button class='en-btn' onclick='checkEN(${num})'>提交</button><button class='en-btn' style='background:#666;margin-top:6px;' onclick='renderEN()'>再產生</button>`;document.getElementById('enQuiz').innerHTML=html}
-  function checkEN(n){for(let i=0;i<n;i++){const inp=document.getElementById('ena'+i),fb=document.getElementById('enf'+i);const ans=inp.dataset.ans,syns=inp.dataset.syns.split(',').filter(Boolean),v=inp.value.trim().toLowerCase();let msg='';if(v===ans||syns.includes(v)){msg='✔';if(v!==ans)msg+='(同義詞)';if(syns.length)msg+=`<span class='syns'>同:${[ans,...syns].join(', ')}</span>`;fb.className='ans-feedback correct'}else{msg=`✘ ${ans}`;if(syns.length)msg+=`<span class='syns'>同:${[ans,...syns].join(', ')}</span>`;fb.className='ans-feedback incorrect'}fb.innerHTML=msg;inp.disabled=true}}  
-  </script>
+  function renderJPReview(data,title){
+    const div = document.getElementById('jpQuiz');
+    let html = `<div class='jp-review-wrap'><div><div class='jp-review-title'>${title}</div>
+    <table class='jp-review'><tr>`;
+    data.forEach((it,i)=>{
+      html += `<td><b>${it.kana}</b><br><span style='color:#888;font-size:.99em'>${it.answer}</span></td>`;
+      if((i+1)%10===0 && i!==data.length-1) html += '</tr><tr>';
+    });
+    html += '</tr></table></div></div>';
+    div.innerHTML = html;
+  }
+  document.getElementById('btnBasic').onclick = ()=>startJP(basicData);
+  document.getElementById('btnDakuten').onclick = ()=>startJP(dakutenData);
+  document.getElementById('btnHandakuten').onclick = ()=>startJP(handakutenData);
+  document.getElementById('btnReviewBasic').onclick = ()=>renderJPReview(basicData,'基本50音複習');
+  document.getElementById('btnReviewDakuten').onclick = ()=>renderJPReview(dakutenData,'濁音複習');
+  document.getElementById('btnReviewHandakuten').onclick = ()=>renderJPReview(handakutenData,'半濁音複習');
+  window.onload = ()=>startJP(basicData);
+
+  // ------------ 英文單字（本地JSON，請和index同資料夾） -------------
+  let vocab = [];
+  async function loadVocab(){
+    try{
+      const res = await fetch('words_10000.json'); // 請務必與 index.html 放同一資料夾
+      vocab = await res.json(); renderEN();
+    }catch(err){
+      document.getElementById('enQuiz').innerHTML = '⚠️ 無法載入單字庫，請檢查網路或稍後再試';
+      console.error(err);
+    }
+  }
+  function shuffleV(a){ return a.map(v=>({v,sort:Math.random()})).sort((a,b)=>a.sort-b.sort).map(e=>e.v);}
+  function renderEN(){
+    const num=20; const list=shuffleV(vocab).slice(0,num);
+    let html='';
+    list.forEach((it,i)=>{
+      const w=encodeURIComponent(it.word), syns=it.syns||[];
+      html+=`<div class='word-item'><span class='word-index'>${i+1}.</span>
+      <span class='word-meaning'>${it.meaning}</span>
+      <input id='ena${i}' class='ans-input' data-ans='${it.word.toLowerCase()}' data-syns='${syns.join(',')}' autocomplete='off'/>
+      <span id='enf${i}' class='ans-feedback'></span>
+      <span class='word-src'>[${it.src}]</span>
+      <span class='word-link'><a href='https://dictionary.cambridge.org/dictionary/english/${w}' target='_blank'>Cambridge</a>
+      <a href='https://www.urbandictionary.com/define.php?term=${w}' target='_blank'>Urban</a></span></div>`;
+    });
+    html += `<button class='en-btn' onclick='checkEN(${num})'>提交</button>
+    <button class='en-btn' style='background:#666;margin-top:6px;' onclick='renderEN()'>再產生</button>`;
+    document.getElementById('enQuiz').innerHTML = html;
+    document.getElementById('ena0').focus();
+  }
+  function checkEN(n){
+    for(let i=0;i<n;i++){
+      const inp=document.getElementById('ena'+i), fb=document.getElementById('enf'+i);
+      const ans=inp.dataset.ans, syns=inp.dataset.syns.split(',').filter(Boolean), v=inp.value.trim().toLowerCase();
+      let msg='';
+      if(v===ans||syns.includes(v)){msg='✔';if(v!==ans)msg+='(同義詞)';if(syns.length)msg+=`<span class='syns'>同: ${[ans,...syns].join(', ')}</span>`;fb.className='ans-feedback correct';}
+      else{msg=`✘ ${ans}`;if(syns.length)msg+=`<span class='syns'>同: ${[ans,...syns].join(', ')}</span>`;fb.className='ans-feedback incorrect';}
+      fb.innerHTML=msg; inp.disabled=true;
+    }
+  }
+</script>
 </body>
 </html>
