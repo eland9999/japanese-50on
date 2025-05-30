@@ -1,0 +1,22 @@
+[
+  {"word":"abandon","meaning":"拋棄、遺棄","src":"NGSL","syns":["desert","leave"]},
+  {"word":"ability","meaning":"能力、才能","src":"NGSL","syns":["capacity","skill"]},
+  {"word":"absence","meaning":"缺席、缺乏","src":"NGSL","syns":["lack","nonattendance"]},
+  {"word":"abstract","meaning":"抽象的","src":"TOEIC","syns":["theoretical"]},
+  {"word":"academic","meaning":"學術的","src":"TOEIC","syns":["scholarly"]},
+  {"word":"accomplish","meaning":"完成、實現","src":"NGSL","syns":["achieve","complete"]},
+  {"word":"accumulate","meaning":"累積、積聚","src":"GRE","syns":["gather","collect"]},
+  {"word":"accurate","meaning":"準確的","src":"TOEIC","syns":["exact","correct"]},
+  {"word":"adapt","meaning":"適應、改編","src":"CEFR","syns":["adjust","modify"]},
+  {"word":"advantage","meaning":"優勢","src":"NGSL","syns":["benefit","edge"]},
+  {"word":"adventure","meaning":"冒險","src":"NGSL","syns":["exploit","venture"]},
+  {"word":"advocate","meaning":"擁護、支持者","src":"GRE","syns":["support","proponent"]},
+  {"word":"affect","meaning":"影響、感動","src":"NGSL","syns":["influence","impact"]},
+  {"word":"aggregate","meaning":"聚集、總計","src":"GRE","syns":["total","combine"]},
+  {"word":"ambition","meaning":"抱負、野心","src":"NGSL","syns":["aspiration","goal"]},
+  {"word":"analyze","meaning":"分析","src":"NGSL","syns":["examine","study"]},
+  {"word":"annual","meaning":"年度的","src":"TOEIC","syns":["yearly"]},
+  {"word":"anticipate","meaning":"預期、期望","src":"GRE","syns":["expect","foresee"]},
+  {"word":"apparent","meaning":"明顯的、表面的","src":"CEFR","syns":["evident","obvious"]},
+  {"word":"approve","meaning":"批准、同意","src":"TOEIC","syns":["accept","consent"]}
+]
